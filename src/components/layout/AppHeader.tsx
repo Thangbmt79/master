@@ -1,5 +1,5 @@
 import { AppBar, Avatar, Toolbar } from '@mui/material';
-import { tokens } from '../../theme/tokens';
+import { tokens } from '../../theme/Tokens';
 import { BreadcrumbItem, Breadcrumbs } from '../base/Breadcrumbs';
 
 interface AppHeaderProps {

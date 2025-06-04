@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import React from 'react';
-import { tokens } from '../../theme/tokens';
+import { tokens } from '../../theme/Tokens';
 import { BreadcrumbItem } from '../base/Breadcrumbs';
 import { AppHeader } from './AppHeader';
 import { DrawerMenu, MenuItem } from './DrawerMenu';

@@ -1,5 +1,5 @@
 import { Box, SxProps, Typography } from '@mui/material';
-import { tokens } from '../../theme/tokens';
+import { tokens } from '../../theme/Tokens';
 
 interface TextAndBoxBorderProps {
     title: string;

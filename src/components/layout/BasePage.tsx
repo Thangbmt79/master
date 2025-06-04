@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import TextAndBoxBorder from '../base/TextAndBoxBorder';
 import { MainLayout } from './MainLayout';
 import { menuItems } from '../../constants/menuItems';
-import { tokens } from '../../theme/tokens';
+import { tokens } from '../../theme/Tokens';
 
 interface BasePageProps {
     pageId: string;
@@ -75,12 +75,12 @@ export const BasePage = ({
                 <Button
                     variant="contained"
                     startIcon={<AddIcon />}
-                    sx={{
-                        bgcolor: tokens.colors.primary.main,
-                        '&:hover': {
-                            bgcolor: tokens.colors.primary.dark,
-                        },
-                    }}
+                    // sx={{
+                    //     bgcolor: tokens.colors.primary.main,
+                    //     '&:hover': {
+                    //         bgcolor: tokens.colors.primary.dark,
+                    //     },
+                    // }}
                     {...actionButtonProps}
                 >
                     {actionButtonText}

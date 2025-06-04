@@ -1,6 +1,6 @@
 import React from 'react';
 import { Breadcrumbs as MuiBreadcrumbs, Typography, Link } from '@mui/material';
-import { tokens } from '../../theme/tokens';
+import { tokens } from '../../theme/Tokens';
 
 export interface BreadcrumbItem {
     title: React.ReactNode;

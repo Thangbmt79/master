@@ -6,6 +6,8 @@ export const tokens = {
             light: '#2A2A2A',
             dark: '#000000',
             background: '#3C424C',
+            hover: '#25292F',
+            border: '#4A4A4A',
         },
         neutral: {
             '04': '#191F2B',
