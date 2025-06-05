@@ -1,18 +1,24 @@
 import { Add as AddIcon } from '@mui/icons-material';
 import { Button, ButtonProps } from '@mui/material';
 import { ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import TextAndBoxBorder from '../base/TextAndBoxBorder';
 import { MainLayout } from './MainLayout';
 import { menuItems } from '../../constants/menuItems';
-import { tokens } from '../../theme/Tokens';
+import { styled } from '../../theme/Tokens';
+
+interface BreadcrumbItem {
+    title: string | ReactNode;
+    path?: string;
+}
 
 interface BasePageProps {
     pageId: string;
-    title: string;
+    title: ReactNode;
     actionButtonText: string;
     children: ReactNode;
     actionButtonProps?: Partial<ButtonProps>;
+    customBreadcrumbs?: BreadcrumbItem[];
 }
 
 export const BasePage = ({
@@ -21,11 +27,13 @@ export const BasePage = ({
     actionButtonText,
     children,
     actionButtonProps,
+    customBreadcrumbs,
 }: BasePageProps) => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleMenuSelect = (id: string) => {
-        const selectedItem = menuItems.find(item => item.id === id);
+        const selectedItem = menuItems.find((item) => item.id === id);
         if (selectedItem) {
             navigate(selectedItem.path);
         }
@@ -39,23 +47,51 @@ export const BasePage = ({
         console.log('Avatar clicked');
     };
 
-    const breadcrumbs = [
-        {
-            title: (
-                <TextAndBoxBorder
-                    title={title}
-                    styledTypography={{
-                        fontSize: tokens.typography.body1.fontSize,
-                        fontWeight: tokens.typography.body1.fontWeight,
-                    }}
-                />
-            ),
-        },
-    ];
+    const defaultBreadcrumbs = (): BreadcrumbItem[] => {
+        const paths = location.pathname.split('/').filter(Boolean);
+        const breadcrumbs: BreadcrumbItem[] = [];
+
+        const mainPath = paths[0];
+        const mainMenuItem = menuItems.find((item) => item.path === `/${mainPath}`);
+
+        if (mainMenuItem) {
+            breadcrumbs.push({
+                title: (
+                    <TextAndBoxBorder
+                        title={mainMenuItem.title}
+                        styledTypography={{
+                            fontSize: styled.typography.body1.fontSize,
+                            fontWeight: styled.typography.body1.fontWeight,
+                        }}
+                        showBorder
+                    />
+                ),
+                path: mainMenuItem.path,
+            });
+        }
+
+        if (paths.length > 1 && !customBreadcrumbs) {
+            breadcrumbs.push({
+                title: (
+                    <TextAndBoxBorder
+                        title={title}
+                        styledTypography={{
+                            fontSize: styled.typography.body1.fontSize,
+                            fontWeight: styled.typography.body1.fontWeight,
+                        }}
+                        showBorder={false}
+                    />
+                ),
+            });
+        }
+
+        return breadcrumbs;
+    };
+
+    const breadcrumbs = customBreadcrumbs || defaultBreadcrumbs();
 
     return (
         <MainLayout
-            menuItems={menuItems}
             selectedMenuId={pageId}
             onMenuSelect={handleMenuSelect}
             breadcrumbs={breadcrumbs}
@@ -66,28 +102,20 @@ export const BasePage = ({
                 <TextAndBoxBorder
                     title={title}
                     styledTypography={{
-                        fontSize: tokens.typography.h1.fontSize,
-                        fontWeight: tokens.typography.h1.fontWeight,
+                        fontSize: styled.typography.h1.fontSize,
+                        fontWeight: styled.typography.h1.fontWeight,
                     }}
                 />
             }
             pageAction={
-                <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    // sx={{
-                    //     bgcolor: tokens.colors.primary.main,
-                    //     '&:hover': {
-                    //         bgcolor: tokens.colors.primary.dark,
-                    //     },
-                    // }}
-                    {...actionButtonProps}
-                >
-                    {actionButtonText}
-                </Button>
+                actionButtonText ? (
+                    <Button variant="contained" startIcon={<AddIcon />} {...actionButtonProps}>
+                        {actionButtonText}
+                    </Button>
+                ) : null
             }
         >
             {children}
         </MainLayout>
     );
-}; 
+};

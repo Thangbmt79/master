@@ -1,175 +1,118 @@
-import {
-    Autocomplete,
-    Box,
-    Button,
-    Pagination as MuiPagination,
-    Stack,
-    Tab,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Tabs,
-    Typography,
-} from '@mui/material';
-import React from 'react';
+import { Box, InputAdornment, Stack } from '@mui/material';
+import Pagination from '@mui/material/Pagination';
+import { useEffect, useState } from 'react';
+import SearchValueIcon from '../assets/layout-icon/SearchValueIcon';
+import { BaseAutoComplete, BaseAutoCompleteOption } from '../components/base/BaseAutoComplete';
 import { BaseTextField } from '../components/base/BaseTextField';
 import { BasePage } from '../components/layout/BasePage';
-import { tokens } from '../theme/Tokens';
-import { BaseAutoComplete, mockFetchProducts, BaseAutoCompleteOption } from '../components/base/BaseAutoComplete';
+import { ParkingSpaceItem } from '../components/parking/ParkingSpaceItem';
 
-export enum CaptureInfoPostType {
-    MQTT,
-    HTTP,
+const PAGE_SIZE = 5;
+
+async function fetchParkingSpaces({ search, page, location }: { search: string; page: number; location?: string }) {
+    const skip = (page - 1) * PAGE_SIZE;
+    let url = `https://dummyjson.com/products/search?q=${encodeURIComponent(search)}&limit=${PAGE_SIZE}&skip=${skip}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    return {
+        data: (data.products || []).map((p: any) => ({
+            id: p.id,
+            name: p.title,
+            location: p.brand || 'Miami, FL',
+            type: p.category === 'smartphones' ? 'Indoor' : 'Outdoor',
+            floor: p.id % 2 === 0 ? '4' : undefined,
+        })),
+        total: data.total || 0,
+    };
 }
 
-const postTypeOptions = [
-    { id: 1, label: 'MQTT' },
-    { id: 2, label: 'HTTP' },
-];
+async function fetchLocationOptions({ search }: { search: string }) {
+    const res = await fetch('https://dummyjson.com/products?limit=100');
+    const data = await res.json();
+    const brands = Array.from(new Set((data.products || []).map((p: any) => p.brand))).filter(Boolean) as string[];
+    const filtered = brands
+        .filter((b) => b.toLowerCase().includes(search.toLowerCase()))
+        .map((b, idx) => ({ id: idx + 1, name: b }));
+    return {
+        data: [{ id: 0, name: 'All locations' }, ...filtered],
+        hasMore: false,
+    };
+}
 
 export const ParkingSpacePage = () => {
-    const [tabValue, setTabValue] = React.useState(0);
-    const [postType, setPostType] = React.useState<{ id: number; label: string } | null>(postTypeOptions[0]);
+    const [search, setSearch] = useState('');
+    const [location, setLocation] = useState<BaseAutoCompleteOption | null>(null);
+    const [page, setPage] = useState(1);
+    const [spaces, setSpaces] = useState<any[]>([]);
+    const [total, setTotal] = useState(0);
+    const [loading, setLoading] = useState(false);
 
-    // Demo state for BaseAutoComplete
-    const [apiValue, setApiValue] = React.useState<BaseAutoCompleteOption | null>(null);
-    console.log('🚀 ~ ParkingSpacePage ~ apiValue:', apiValue);
-    const [staticValue, setStaticValue] = React.useState<BaseAutoCompleteOption | null>(null);
-    const staticOptions = [
-        { id: 1, name: 'Option One' },
-        { id: 2, name: 'Option Two' },
-        { id: 3, name: 'Option Three' },
-    ];
+    useEffect(() => {
+        setLoading(true);
+        fetchParkingSpaces({ search, page, location: location?.name })
+            .then((res) => {
+                setSpaces(res.data);
+                setTotal(res.total);
+            })
+            .finally(() => setLoading(false));
+    }, [search, page, location]);
+
+    const totalPages = Math.ceil(total / PAGE_SIZE);
 
     return (
         <BasePage pageId="parking" title="Parking Space" actionButtonText="Add Parking">
-            <Box style={{ padding: '20px', color: tokens.colors.white }}>
-                Content area - Add your parking space management components here
-            </Box>
-
-            <Stack direction="row" spacing={2} mb={2} justifyContent="space-between" width={'100%'}>
-                <Box>
-                    <Tabs
-                        value={tabValue}
-                        onChange={(_, newValue) => setTabValue(newValue)}
-                        aria-label="test tabs"
-                        variant="fullWidth"
-                    >
-                        <Tab label="Tab 1" />
-                        <Tab label="Tab 2" />
-                        <Tab label="Tab 3" />
-                    </Tabs>
-                </Box>
-
-                <Stack direction="row" spacing={1} justifyContent="center">
-                    <Button variant="contained">Contained</Button>
-
-                    <Button variant="outlined">Outlined</Button>
-
-                    <Button variant="text">Text</Button>
-
-                    <Button variant="contained" color="cancel">
-                        Cancel
-                    </Button>
-                </Stack>
-            </Stack>
-
-            <Stack direction="column" spacing={2} justifyContent="center" alignItems="center">
-                <Stack direction="row" spacing={2} justifyContent="center" alignItems="center" width={'100%'}>
-                    <BaseTextField
-                        required
-                        sx={{ width: '100%' }}
-                        label="Format"
-                        variant="outlined"
-                        placeholder="Format"
-                        InputLabelProps={{ shrink: true }}
-                    />
-                    <Autocomplete
-                        options={postTypeOptions}
-                        getOptionLabel={(option) => option.label}
-                        renderInput={(params) => (
-                            <BaseTextField
-                                {...params}
-                                required
-                                label="Post type"
-                                placeholder="Select post type"
-                                InputLabelProps={{ shrink: true }}
-                            />
-                        )}
-                        value={postType}
-                        onChange={(_, newValue) => {
-                            setPostType(newValue);
-                            console.log(newValue);
-                        }}
-                        clearIcon={true}
-                        sx={{ width: '100%' }}
-                    />
-                </Stack>
-
-                <Stack direction="row" spacing={2} justifyContent="center" alignItems="center" width={'100%'}>
-                    {/* --- BaseAutoComplete API demo --- */}
-                    <Box width={'100%'}>
-                        <BaseAutoComplete
-                            value={apiValue}
-                            onChange={setApiValue}
-                            fetchOptions={mockFetchProducts}
-                            label="Product (API)"
-                            placeholder="Type to search products..."
-                            required
-                            pageSize={10}
-                        />
-                        <Typography variant="caption" color="text.secondary">
-                            Selected: {apiValue ? apiValue.name : 'None'}
-                        </Typography>
-                    </Box>
-                    {/* --- BaseAutoComplete static demo --- */}
-                    <Box width={'100%'}>
-                        <BaseAutoComplete
-                            value={staticValue}
-                            onChange={setStaticValue}
-                            options={staticOptions}
-                            label="Static Options"
-                            placeholder="Type to filter..."
-                            required
-                        />
-                        <Typography variant="caption" color="text.secondary">
-                            Selected: {staticValue ? staticValue.name : 'None'}
-                        </Typography>
-                    </Box>
-                </Stack>
-
-                <TableContainer component={Box}>
-                    <Table aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Parking Space</TableCell>
-                                <TableCell>Parking Space</TableCell>
-                                <TableCell>Parking Space</TableCell>
-                                <TableCell>Parking Space</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell>Parking Space</TableCell>
-                                <TableCell>Parking Space</TableCell>
-                                <TableCell>Parking Space</TableCell>
-                                <TableCell>Parking Space</TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-
-                <MuiPagination
-                    count={10}
-                    page={9}
-                    onChange={(_, page) => console.log(page)}
-                    variant="outlined"
-                    shape="rounded"
+            <Stack direction="row" spacing={2} my={2}>
+                <BaseTextField
+                    placeholder="Search"
+                    sx={{ width: '100%', input: { paddingLeft: 0 } }}
+                    value={search}
+                    onChange={(e) => {
+                        setSearch(e.target.value);
+                        setPage(1);
+                    }}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchValueIcon />
+                            </InputAdornment>
+                        ),
+                    }}
+                    InputLabelProps={{
+                        shrink: false,
+                    }}
+                />
+                <BaseAutoComplete
+                    label="Location"
+                    placeholder="All locations"
+                    value={location}
+                    onChange={(value) => {
+                        setLocation(value);
+                        setPage(1);
+                    }}
+                    fetchOptions={fetchLocationOptions}
+                    required={false}
                 />
             </Stack>
+            <Box>
+                {loading ? (
+                    <div style={{ color: 'white', textAlign: 'center', margin: 32 }}>Loading...</div>
+                ) : (
+                    spaces.map((item) => (
+                        <ParkingSpaceItem
+                            key={item.id}
+                            item={item}
+                            onEdit={() => alert('Edit ' + item.name)}
+                            onDelete={() => alert('Delete ' + item.name)}
+                        />
+                    ))
+                )}
+            </Box>
+            <Pagination
+                count={totalPages}
+                page={page}
+                onChange={(_, value) => setPage(value)}
+                sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}
+            />
         </BasePage>
     );
 };

@@ -13,8 +13,9 @@ import {
     Typography,
 } from '@mui/material';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { tokens } from '../../theme/Tokens';
+import { styled } from '../../theme/Tokens';
 import { BaseTextField, BaseTextFieldProps } from './BaseTextField';
+import ScrollableBoxCustom from './ScrollableBoxCustom';
 
 // Types for API and hardcoded options
 export interface BaseAutoCompleteOption {
@@ -176,9 +177,9 @@ export const BaseAutoComplete: React.FC<BaseAutoCompleteProps> = ({
                     endAdornment: (
                         <InputAdornment position="end">
                             {loading ? (
-                                <CircularProgress size={22} sx={{ color: tokens.colors.text.secondary }} />
+                                <CircularProgress size={22} sx={{ color: styled.colors.text.secondary }} />
                             ) : (
-                                <ArrowDropDownIcon sx={{ color: tokens.colors.text.secondary, fontSize: 22 }} />
+                                <ArrowDropDownIcon sx={{ color: styled.colors.text.secondary, fontSize: 22 }} />
                             )}
                         </InputAdornment>
                     ),
@@ -203,53 +204,55 @@ export const BaseAutoComplete: React.FC<BaseAutoCompleteProps> = ({
                         },
                     ]}
                 >
-                    <Paper elevation={3} sx={{ backgroundColor: tokens.colors.neutral['02'] }}>
-                        <List
-                            ref={listRef}
-                            onScroll={handleScroll}
-                            sx={{
-                                p: 0,
-                                maxHeight: 300,
-                                overflow: 'auto',
-                            }}
-                        >
-                            {!loading && options.length === 0 && (
-                                <ListItem>
-                                    <Typography variant="body2">No options</Typography>
-                                </ListItem>
-                            )}
-                            {!loading &&
-                                options.map((option) => (
-                                    <ListItemButton
-                                        key={option.id}
-                                        selected={value?.id === option.id}
-                                        onMouseDown={() => handleOptionClick(option)}
-                                    >
-                                        {renderOption ? (
-                                            renderOption(option)
-                                        ) : (
-                                            <ListItemText primary={getOptionLabel(option)} />
-                                        )}
-                                    </ListItemButton>
-                                ))}
-                            {(loadingMore || loading) && (
-                                <>
+                    <Paper elevation={3} sx={{ backgroundColor: styled.colors.neutral['02'] }}>
+                        <ScrollableBoxCustom scrollbarColor={styled.colors.white}>
+                            <List
+                                ref={listRef}
+                                onScroll={handleScroll}
+                                sx={{
+                                    p: 0,
+                                    maxHeight: 300,
+                                    overflow: 'auto',
+                                }}
+                            >
+                                {!loading && options.length === 0 && (
                                     <ListItem>
-                                        <Skeleton variant="rectangular" width="100%" height={32} />
+                                        <Typography variant="body2">No options</Typography>
                                     </ListItem>
+                                )}
+                                {!loading &&
+                                    options.map((option) => (
+                                        <ListItemButton
+                                            key={option.id}
+                                            selected={value?.id === option.id}
+                                            onMouseDown={() => handleOptionClick(option)}
+                                        >
+                                            {renderOption ? (
+                                                renderOption(option)
+                                            ) : (
+                                                <ListItemText primary={getOptionLabel(option)} />
+                                            )}
+                                        </ListItemButton>
+                                    ))}
+                                {(loadingMore || loading) && (
+                                    <>
+                                        <ListItem>
+                                            <Skeleton variant="rectangular" width="100%" height={32} />
+                                        </ListItem>
+                                        <ListItem>
+                                            <Skeleton variant="rectangular" width="100%" height={32} />
+                                        </ListItem>
+                                    </>
+                                )}
+                                {noMore && !loadingMore && loading && (
                                     <ListItem>
-                                        <Skeleton variant="rectangular" width="100%" height={32} />
+                                        <Typography variant="body2" color="text.secondary">
+                                            No more
+                                        </Typography>
                                     </ListItem>
-                                </>
-                            )}
-                            {noMore && !loadingMore && loading && (
-                                <ListItem>
-                                    <Typography variant="body2" color="text.secondary">
-                                        No more
-                                    </Typography>
-                                </ListItem>
-                            )}
-                        </List>
+                                )}
+                            </List>
+                        </ScrollableBoxCustom>
                     </Paper>
                 </Popper>
             )}

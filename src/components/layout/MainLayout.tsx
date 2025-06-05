@@ -1,12 +1,12 @@
 import { Box } from '@mui/material';
 import React from 'react';
-import { tokens } from '../../theme/Tokens';
+import { styled } from '../../theme/Tokens';
 import { BreadcrumbItem } from '../base/Breadcrumbs';
+import ScrollableBoxCustom from '../base/ScrollableBoxCustom';
 import { AppHeader } from './AppHeader';
-import { DrawerMenu, MenuItem } from './DrawerMenu';
+import { DrawerMenu } from './DrawerMenu';
 
 interface MainLayoutProps {
-    menuItems: MenuItem[];
     selectedMenuId: string;
     onMenuSelect: (id: string) => void;
     breadcrumbs: BreadcrumbItem[];
@@ -21,7 +21,6 @@ interface MainLayoutProps {
 const HEADER_HEIGHT = 64;
 
 export const MainLayout = ({
-    menuItems,
     selectedMenuId,
     onMenuSelect,
     breadcrumbs,
@@ -33,8 +32,8 @@ export const MainLayout = ({
     pageAction,
 }: MainLayoutProps) => {
     return (
-        <Box sx={{ display: 'flex', height: '100vh', bgcolor: tokens.colors.primary.background }}>
-            <DrawerMenu items={menuItems} selectedId={selectedMenuId} onSelect={onMenuSelect} />
+        <Box sx={{ display: 'flex', height: '100vh', bgcolor: styled.colors.primary.background }}>
+            <DrawerMenu selectedId={selectedMenuId} onSelect={onMenuSelect} />
 
             <Box
                 component="main"
@@ -55,30 +54,31 @@ export const MainLayout = ({
                 />
                 <Box
                     sx={{
-                        bgcolor: tokens.colors.primary.main,
-                        border: `1px solid ${tokens.colors.neutral['03']}`,
+                        bgcolor: styled.colors.primary.main,
+                        border: `1px solid ${styled.colors.neutral['03']}`,
                         mt: `${HEADER_HEIGHT}px`,
-                        px: tokens.spacing.lg,
-                        py: tokens.spacing.lg,
+                        px: styled.spacing.lg,
+                        py: styled.spacing.lg,
                         height: `calc(100% - ${HEADER_HEIGHT}px)`,
-                        borderRadius: tokens.borderRadius.sm,
+                        borderRadius: styled.borderRadius.sm,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        overflow: 'hidden',
                     }}
                 >
-                    <Box>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                mb: tokens.spacing.lg,
-                            }}
-                        >
-                            {pageTitle}
-                            {pageAction}
-                        </Box>
-
-                        {children}
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            mb: styled.spacing.lg,
+                        }}
+                    >
+                        {pageTitle}
+                        {pageAction}
                     </Box>
+
+                    <ScrollableBoxCustom>{children}</ScrollableBoxCustom>
                 </Box>
             </Box>
         </Box>

@@ -1,5 +1,5 @@
 import { AppBar, Avatar, Toolbar } from '@mui/material';
-import { tokens } from '../../theme/Tokens';
+import { styled } from '../../theme/Tokens';
 import { BreadcrumbItem, Breadcrumbs } from '../base/Breadcrumbs';
 
 interface AppHeaderProps {
@@ -19,8 +19,7 @@ export const AppHeader = ({ breadcrumbs, onBreadcrumbNavigate, avatarUrl, onAvat
             sx={{
                 width: `calc(100% - ${DRAWER_WIDTH}px)`,
                 ml: `${DRAWER_WIDTH}px`,
-                backgroundColor: tokens.colors.background.default,
-                // borderBottom: `1px solid ${tokens.colors.neutral['03']}`,
+                backgroundColor: styled.colors.background.default,
             }}
         >
             <Toolbar sx={{ justifyContent: 'space-between' }}>

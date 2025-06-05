@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material';
-import { tokens } from './Tokens';
+import { styled } from './Tokens';
 import type {} from '@mui/material/styles';
 
 declare module '@mui/material/styles' {
@@ -20,21 +20,21 @@ declare module '@mui/material/Button' {
 export const theme = createTheme({
     palette: {
         primary: {
-            main: tokens.colors.primary.main,
-            light: tokens.colors.primary.light,
-            dark: tokens.colors.primary.dark,
+            main: styled.colors.primary.main,
+            light: styled.colors.primary.light,
+            dark: styled.colors.primary.dark,
         },
         background: {
-            default: tokens.colors.background.default,
-            paper: tokens.colors.background.paper,
+            default: styled.colors.background.default,
+            paper: styled.colors.background.paper,
         },
         text: {
-            primary: tokens.colors.text.primary,
-            secondary: tokens.colors.text.secondary,
+            primary: styled.colors.text.primary,
+            secondary: styled.colors.text.secondary,
         },
         cancel: {
-            main: tokens.colors.primary.border,
-            contrastText: tokens.colors.white,
+            main: styled.colors.primary.border,
+            contrastText: styled.colors.white,
         },
     },
     typography: {
@@ -93,8 +93,8 @@ export const theme = createTheme({
         MuiCssBaseline: {
             styleOverrides: {
                 body: {
-                    backgroundColor: tokens.colors.background.default,
-                    color: tokens.colors.text.primary,
+                    backgroundColor: styled.colors.background.default,
+                    color: styled.colors.text.primary,
                 },
             },
         },
@@ -111,24 +111,24 @@ export const theme = createTheme({
                     boxShadow: 'none',
                 },
                 containedPrimary: {
-                    backgroundColor: tokens.colors.primary.background,
-                    color: tokens.colors.white,
+                    backgroundColor: styled.colors.primary.background,
+                    color: styled.colors.white,
                     '&:hover': {
-                        backgroundColor: tokens.colors.primary.hover,
+                        backgroundColor: styled.colors.primary.hover,
                     },
                 },
                 outlined: {
-                    borderColor: tokens.colors.primary.background,
-                    color: tokens.colors.white,
+                    borderColor: styled.colors.primary.background,
+                    color: styled.colors.white,
                     '&:hover': {
-                        borderColor: tokens.colors.primary.border,
+                        borderColor: styled.colors.primary.border,
                         backgroundColor: 'rgba(60,66,76,0.04)',
                     },
                 },
                 text: {
-                    color: tokens.colors.white,
+                    color: styled.colors.white,
                     '&:hover': {
-                        backgroundColor: tokens.colors.primary.hover,
+                        backgroundColor: styled.colors.primary.hover,
                     },
                 },
             },
@@ -136,47 +136,47 @@ export const theme = createTheme({
         MuiContainer: {
             styleOverrides: {
                 root: {
-                    backgroundColor: tokens.colors.neutral['04'],
-                    borderRadius: tokens.borderRadius.md,
-                    padding: tokens.spacing.md,
+                    backgroundColor: styled.colors.neutral['04'],
+                    borderRadius: styled.borderRadius.md,
+                    padding: styled.spacing.md,
                 },
             },
         },
         MuiSelect: {
             styleOverrides: {
                 select: {
-                    backgroundColor: tokens.colors.neutral['03'],
-                    color: tokens.colors.white,
-                    borderRadius: tokens.borderRadius.sm,
+                    backgroundColor: styled.colors.neutral['03'],
+                    color: styled.colors.white,
+                    borderRadius: styled.borderRadius.sm,
                 },
                 icon: {
-                    color: tokens.colors.white,
+                    color: styled.colors.white,
                 },
             },
         },
         MuiPaginationItem: {
             styleOverrides: {
                 root: {
-                    color: tokens.colors.white,
+                    color: styled.colors.white,
                     backgroundColor: 'transparent',
                     borderRadius: '4px',
                     border: 'none',
                     '&.Mui-selected': {
-                        backgroundColor: tokens.colors.neutral['04'],
-                        color: tokens.colors.white,
+                        backgroundColor: styled.colors.neutral['04'],
+                        color: styled.colors.white,
                     },
                     '&.Mui-disabled': {
-                        color: tokens.colors.neutral['01'],
+                        color: styled.colors.neutral['01'],
                     },
                     '&:hover': {
-                        backgroundColor: tokens.colors.primary.hover,
+                        backgroundColor: styled.colors.primary.hover,
                     },
                 },
                 previousNext: {
-                    backgroundColor: tokens.colors.primary.background,
-                    color: tokens.colors.white,
+                    backgroundColor: styled.colors.primary.background,
+                    color: styled.colors.white,
                     '&:hover': {
-                        backgroundColor: tokens.colors.primary.hover,
+                        backgroundColor: styled.colors.primary.hover,
                     },
                 },
             },
@@ -184,7 +184,7 @@ export const theme = createTheme({
         MuiTabs: {
             styleOverrides: {
                 indicator: {
-                    backgroundColor: tokens.colors.white,
+                    backgroundColor: styled.colors.white,
                     height: '3px',
                 },
             },
@@ -194,8 +194,8 @@ export const theme = createTheme({
                 root: {
                     color: '#6F767E',
                     '&.Mui-selected': {
-                        color: tokens.colors.white,
-                        borderBottom: '3px solid ' + tokens.colors.white,
+                        color: styled.colors.white,
+                        borderBottom: '3px solid ' + styled.colors.white,
                     },
                     borderBottom: '3px solid transparent',
                 },
@@ -204,34 +204,39 @@ export const theme = createTheme({
         MuiTextField: {
             styleOverrides: {
                 root: {
-                    backgroundColor: tokens.colors.primary.dark,
-                    borderRadius: tokens.borderRadius.sm,
+                    backgroundColor: styled.colors.primary.dark,
+                    borderRadius: styled.borderRadius.sm,
                     '& .MuiOutlinedInput-root': {
+                        height: '40px',
                         '& fieldset': {
                             borderColor: '#414141',
+                            top: -5,
                         },
                         '&:hover fieldset': {
                             borderColor: '#888888',
                         },
                         '&.Mui-focused fieldset': {
-                            borderColor: tokens.colors.white,
+                            borderColor: styled.colors.white,
                         },
-                        color: tokens.colors.white,
+                        color: styled.colors.white,
                     },
                     '& input': {
-                        color: tokens.colors.white,
+                        padding: '0 14px',
+                        color: styled.colors.white,
                         '&::placeholder': {
-                            color: tokens.colors.text.secondary,
+                            color: styled.colors.text.secondary,
                             opacity: 1,
                         },
                     },
                     '& .MuiInputLabel-root': {
-                        color: tokens.colors.text.secondary,
+                        color: styled.colors.text.secondary,
+                        transform: 'translate(14px, 8px) scale(1)',
                         '&.Mui-focused': {
-                            color: tokens.colors.text.secondary,
+                            color: styled.colors.text.secondary,
                         },
                         '&.MuiInputLabel-shrink': {
-                            color: tokens.colors.text.secondary,
+                            transform: 'translate(14px, -8px) scale(0.75)',
+                            color: styled.colors.text.secondary,
                         },
                     },
                 },
@@ -240,45 +245,57 @@ export const theme = createTheme({
         MuiAutocomplete: {
             styleOverrides: {
                 root: {
-                    backgroundColor: tokens.colors.primary.dark,
-                    borderRadius: tokens.borderRadius.sm,
+                    backgroundColor: styled.colors.primary.dark,
+                    borderRadius: styled.borderRadius.sm,
                     '& .MuiOutlinedInput-root': {
-                        '&.Mui-focused fieldset': {
-                            borderColor: tokens.colors.white,
+                        height: '40px',
+                        '& fieldset': {
+                            borderColor: '#414141',
+                            top: -5,
                         },
-                        color: tokens.colors.white,
+                        '&.Mui-focused fieldset': {
+                            borderColor: styled.colors.white,
+                        },
+                        color: styled.colors.white,
                         '& input': {
-                            color: tokens.colors.white,
+                            padding: '0 14px !important',
+                            color: styled.colors.white,
                             '&::placeholder': {
-                                color: tokens.colors.text.secondary,
+                                color: styled.colors.text.secondary,
                                 opacity: 1,
                             },
                         },
                     },
                     '& .MuiInputLabel-root': {
-                        color: tokens.colors.text.secondary,
+                        color: styled.colors.text.secondary,
+                        transform: 'translate(14px, 8px) scale(1)',
                         '&.Mui-focused': {
-                            color: tokens.colors.text.secondary,
+                            color: styled.colors.text.secondary,
                         },
                         '&.MuiInputLabel-shrink': {
-                            color: tokens.colors.text.secondary,
+                            transform: 'translate(14px, -8px) scale(0.75)',
+                            color: styled.colors.text.secondary,
                         },
                     },
-                    '& .MuiAutocomplete-endAdornment .MuiSvgIcon-root': {
-                        color: tokens.colors.text.secondary,
+                    '& .MuiAutocomplete-endAdornment': {
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        '& .MuiSvgIcon-root': {
+                            color: styled.colors.text.secondary,
+                        },
                     },
                 },
                 paper: {
-                    backgroundColor: tokens.colors.neutral['02'],
+                    backgroundColor: styled.colors.neutral['02'],
                 },
             },
         },
         MuiTableHead: {
             styleOverrides: {
                 root: {
-                    backgroundColor: tokens.colors.neutral['04'],
+                    backgroundColor: styled.colors.neutral['04'],
                     '& .MuiTableCell-head': {
-                        color: tokens.colors.white,
+                        color: styled.colors.white,
                         fontWeight: 600,
                     },
                 },
@@ -287,9 +304,9 @@ export const theme = createTheme({
         MuiTableBody: {
             styleOverrides: {
                 root: {
-                    backgroundColor: tokens.colors.background.default,
+                    backgroundColor: styled.colors.background.default,
                     '& .MuiTableCell-body': {
-                        color: tokens.colors.white,
+                        color: styled.colors.white,
                     },
                 },
             },

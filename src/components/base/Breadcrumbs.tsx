@@ -1,6 +1,7 @@
 import React from 'react';
 import { Breadcrumbs as MuiBreadcrumbs, Typography, Link } from '@mui/material';
-import { tokens } from '../../theme/Tokens';
+import { styled } from '../../theme/Tokens';
+import NavigateNextIcon from '../../assets/appbar-icon/NavigateNextIcon';
 
 export interface BreadcrumbItem {
     title: React.ReactNode;
@@ -21,9 +22,10 @@ export const Breadcrumbs = ({ items, onNavigate }: BreadcrumbsProps) => {
     return (
         <MuiBreadcrumbs
             aria-label="breadcrumb"
+            separator={<NavigateNextIcon />}
             sx={{
                 '& .MuiBreadcrumbs-separator': {
-                    color: tokens.colors.text.secondary,
+                    color: styled.colors.text.secondary,
                 },
             }}
         >
@@ -34,8 +36,8 @@ export const Breadcrumbs = ({ items, onNavigate }: BreadcrumbsProps) => {
                     return (
                         <Typography
                             key={item.path}
-                            color={tokens.colors.text.primary}
-                            sx={{ fontSize: tokens.typography.body1.fontSize }}
+                            color={styled.colors.text.primary}
+                            sx={{ fontSize: styled.typography.body1.fontSize }}
                         >
                             {item.title}
                         </Typography>
@@ -47,7 +49,7 @@ export const Breadcrumbs = ({ items, onNavigate }: BreadcrumbsProps) => {
                         key={item.path}
                         href={item.path}
                         onClick={item.path ? handleClick(item.path) : undefined}
-                        color={tokens.colors.text.secondary}
+                        color={styled.colors.text.secondary}
                         sx={{
                             textDecoration: 'none',
                             '&:hover': {
