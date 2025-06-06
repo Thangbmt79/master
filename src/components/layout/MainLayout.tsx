@@ -1,10 +1,11 @@
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import React from 'react';
 import { styled } from '../../theme/Tokens';
-import { BreadcrumbItem } from '../base/Breadcrumbs';
 import ScrollableBoxCustom from '../base/ScrollableBoxCustom';
 import { AppHeader } from './AppHeader';
 import { DrawerMenu } from './DrawerMenu';
+import useMedia from '../../hooks/useMedia';
+import { BreadcrumbItem } from './BasePage';
 
 interface MainLayoutProps {
     selectedMenuId: string;
@@ -19,6 +20,7 @@ interface MainLayoutProps {
 }
 
 const HEADER_HEIGHT = 64;
+const HEADER_HEIGHT_MOBILE = 56;
 
 export const MainLayout = ({
     selectedMenuId,
@@ -31,6 +33,8 @@ export const MainLayout = ({
     pageTitle,
     pageAction,
 }: MainLayoutProps) => {
+    const { isMobileSM } = useMedia();
+    const headerHeight = isMobileSM ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT;
     return (
         <Box sx={{ display: 'flex', height: '100vh', bgcolor: styled.colors.primary.background }}>
             <DrawerMenu selectedId={selectedMenuId} onSelect={onMenuSelect} />
@@ -43,7 +47,7 @@ export const MainLayout = ({
                     overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
-                    p: 2,
+                    p: isMobileSM ? 1 : 2,
                 }}
             >
                 <AppHeader
@@ -56,27 +60,25 @@ export const MainLayout = ({
                     sx={{
                         bgcolor: styled.colors.primary.main,
                         border: `1px solid ${styled.colors.neutral['03']}`,
-                        mt: `${HEADER_HEIGHT}px`,
-                        px: styled.spacing.lg,
-                        py: styled.spacing.lg,
-                        height: `calc(100% - ${HEADER_HEIGHT}px)`,
+                        mt: `${headerHeight}px`,
+                        px: isMobileSM ? styled.spacing.md : styled.spacing.lg,
+                        py: isMobileSM ? styled.spacing.md : styled.spacing.lg,
+                        height: `calc(100% - ${headerHeight}px)`,
                         borderRadius: styled.borderRadius.sm,
                         display: 'flex',
                         flexDirection: 'column',
                         overflow: 'hidden',
                     }}
                 >
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            mb: styled.spacing.lg,
-                        }}
+                    <Stack
+                        direction={isMobileSM ? 'column' : 'row'}
+                        justifyContent="space-between"
+                        mb={isMobileSM ? styled.spacing.md : styled.spacing.lg}
+                        spacing={!isMobileSM ? 0 : styled.spacing.md}
                     >
                         {pageTitle}
                         {pageAction}
-                    </Box>
+                    </Stack>
 
                     <ScrollableBoxCustom>{children}</ScrollableBoxCustom>
                 </Box>

@@ -1,6 +1,7 @@
 import { Fade, IconButton, Tooltip, TooltipProps } from '@mui/material';
 import React, { ReactNode } from 'react';
 import { styled } from '../../../theme/Tokens';
+import useMedia from '../../../hooks/useMedia';
 
 export type ToolTipProps = {
     icon: ReactNode;
@@ -10,6 +11,8 @@ export type ToolTipProps = {
 };
 
 export default function TooltipIconButton(props: ToolTipProps) {
+    const { isMobileSM } = useMedia();
+
     return (
         <Tooltip
             TransitionComponent={Fade}
@@ -24,8 +27,8 @@ export default function TooltipIconButton(props: ToolTipProps) {
                         background: styled.colors.neutral['02'],
                         boxShadow: `0 0 0 4px ${styled.colors.neutral['03']}`,
                     },
-                    width: 26,
-                    height: 26,
+                    width: isMobileSM ? 24 : 26,
+                    height: isMobileSM ? 24 : 26,
                 }}
                 size="small"
             >

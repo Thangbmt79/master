@@ -7,6 +7,7 @@ import TextAndBoxBorder from '../base/TextAndBoxBorder';
 import { BasePage } from '../layout/BasePage';
 import { Product } from '../utils';
 import ParkingFloorDetail from './ParkingFloorDetail';
+import useMedia from '../../hooks/useMedia';
 
 const LoadingWrapper = muiStyled(Box)({
     display: 'flex',
@@ -39,6 +40,7 @@ const fetchParkingSpaceDetail = async (id: number): Promise<Product> => {
 };
 
 export const ParkingSpaceDetail: React.FC = () => {
+    const { isMobileSM } = useMedia();
     const { idParking } = useParams<{ idParking: string }>();
     const [parkingSpace, setParkingSpace] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
@@ -67,7 +69,7 @@ export const ParkingSpaceDetail: React.FC = () => {
     if (error) {
         return (
             <BasePage
-                pageId="parking-detail"
+                pageId="parking"
                 title="Error"
                 actionButtonText=""
                 actionButtonProps={{ style: { display: 'none' } }}
@@ -80,7 +82,7 @@ export const ParkingSpaceDetail: React.FC = () => {
     if (loading) {
         return (
             <BasePage
-                pageId="parking-detail"
+                pageId="parking"
                 title="Parking Space Detail"
                 actionButtonText=""
                 actionButtonProps={{ style: { display: 'none' } }}
@@ -95,7 +97,7 @@ export const ParkingSpaceDetail: React.FC = () => {
     if (!parkingSpace) {
         return (
             <BasePage
-                pageId="parking-detail"
+                pageId="parking"
                 title="Parking Space Detail"
                 actionButtonText=""
                 actionButtonProps={{ style: { display: 'none' } }}
@@ -124,6 +126,8 @@ export const ParkingSpaceDetail: React.FC = () => {
                     title: (
                         <TextAndBoxBorder
                             title={'Packing Space'}
+                            variant="h3"
+                            showBorder={!isMobileSM}
                             styledTypography={{
                                 fontSize: styled.typography.body1.fontSize,
                                 fontWeight: styled.typography.body1.fontWeight,
@@ -154,7 +158,7 @@ export const ParkingSpaceDetail: React.FC = () => {
                             { label: 'Post code:', value: 'M1 2AB' },
                             { label: 'Status:', value: 'Active' },
                         ].map((item, index) => (
-                            <Grid item xs={12} sm={6} key={index}>
+                            <Grid item xs={12} md={6} key={index}>
                                 <Stack direction="row" spacing={0.5} flexWrap="wrap">
                                     <InfoValue>{item.label}</InfoValue>
                                     <InfoValue>{item.value}</InfoValue>

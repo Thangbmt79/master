@@ -1,3 +1,4 @@
+import { MenuList } from '@mui/material';
 import AssetsIcon from '../assets/drawer-icon/AssetsIcon';
 import CarCheckInOrCheckOutIcon from '../assets/drawer-icon/CarCheckInOrCheckOutIcon';
 import PackingSpaceIcon from '../assets/drawer-icon/PackingSpaceIcon';
@@ -10,6 +11,12 @@ export interface MenuItem {
 }
 
 export const menuItems: MenuItem[] = [
+    {
+        id: 'menu',
+        title: 'Menu',
+        icon: <MenuList />,
+        path: '/menu',
+    },
     {
         id: 'parking',
         title: 'Parking Space',

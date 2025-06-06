@@ -6,8 +6,9 @@ import TextAndBoxBorder from '../base/TextAndBoxBorder';
 import { MainLayout } from './MainLayout';
 import { menuItems } from '../../constants/menuItems';
 import { styled } from '../../theme/Tokens';
+import useMedia from '../../hooks/useMedia';
 
-interface BreadcrumbItem {
+export interface BreadcrumbItem {
     title: string | ReactNode;
     path?: string;
 }
@@ -31,6 +32,7 @@ export const BasePage = ({
 }: BasePageProps) => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { isMobileSM } = useMedia();
 
     const handleMenuSelect = (id: string) => {
         const selectedItem = menuItems.find((item) => item.id === id);
@@ -59,11 +61,12 @@ export const BasePage = ({
                 title: (
                     <TextAndBoxBorder
                         title={mainMenuItem.title}
+                        variant="h3"
                         styledTypography={{
                             fontSize: styled.typography.body1.fontSize,
                             fontWeight: styled.typography.body1.fontWeight,
                         }}
-                        showBorder
+                        showBorder={!isMobileSM}
                     />
                 ),
                 path: mainMenuItem.path,
@@ -101,6 +104,7 @@ export const BasePage = ({
             pageTitle={
                 <TextAndBoxBorder
                     title={title}
+                    showBorder={!isMobileSM}
                     styledTypography={{
                         fontSize: styled.typography.h1.fontSize,
                         fontWeight: styled.typography.h1.fontWeight,

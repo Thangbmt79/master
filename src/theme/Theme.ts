@@ -42,51 +42,104 @@ export const theme = createTheme({
         h1: {
             fontSize: '24px',
             fontWeight: 600,
+            lineHeight: 1.5,
+            '@media (max-width: 900px)': {
+                fontSize: '22px',
+                lineHeight: 1.4,
+            },
+            '@media (max-width: 600px)': {
+                fontSize: '20px',
+                lineHeight: 1.3,
+            },
         },
         h2: {
             fontSize: '20px',
             fontWeight: 600,
+            lineHeight: 1.4,
+            '@media (max-width: 600px)': {
+                fontSize: '18px',
+            },
         },
         h3: {
             fontSize: '18px',
             fontWeight: 600,
+            lineHeight: 1.4,
+            '@media (max-width: 600px)': {
+                fontSize: '16px',
+            },
         },
         h4: {
             fontSize: '16px',
             fontWeight: 600,
+            lineHeight: 1.4,
+            '@media (max-width: 600px)': {
+                fontSize: '15px',
+            },
         },
         h5: {
             fontSize: '15px',
             fontWeight: 500,
+            lineHeight: 1.4,
+            '@media (max-width: 600px)': {
+                fontSize: '14px',
+            },
         },
         h6: {
             fontSize: '14px',
             fontWeight: 500,
+            lineHeight: 1.4,
+            '@media (max-width: 600px)': {
+                fontSize: '13px',
+            },
         },
         subtitle1: {
             fontSize: '13px',
             fontWeight: 400,
+            lineHeight: 1.4,
+            '@media (max-width: 600px)': {
+                fontSize: '12px',
+            },
         },
         subtitle2: {
             fontSize: '12px',
             fontWeight: 400,
+            lineHeight: 1.4,
+            '@media (max-width: 600px)': {
+                fontSize: '11px',
+            },
         },
         body1: {
             fontSize: '16px',
             fontWeight: 400,
+            lineHeight: 1.5,
+            '@media (max-width: 600px)': {
+                fontSize: '14px',
+            },
         },
         body2: {
             fontSize: '14px',
             fontWeight: 400,
+            lineHeight: 1.5,
+            '@media (max-width: 600px)': {
+                fontSize: '13px',
+            },
         },
         caption: {
             fontSize: '12px',
             fontWeight: 400,
+            lineHeight: 1.4,
+            '@media (max-width: 600px)': {
+                fontSize: '11px',
+            },
         },
         button: {
             fontSize: '14px',
             fontWeight: 500,
             textTransform: 'none',
+            lineHeight: 1.4,
+            '@media (max-width: 600px)': {
+                fontSize: '13px',
+            },
         },
     },
     components: {
@@ -109,6 +162,17 @@ export const theme = createTheme({
                     height: 'fit-content',
                     fontWeight: 400,
                     boxShadow: 'none',
+                    minWidth: '96px',
+                    '@media (max-width: 900px)': {
+                        padding: '0.625rem 0.875rem',
+                        fontSize: '0.8125rem',
+                        minWidth: '80px',
+                    },
+                    '@media (max-width: 600px)': {
+                        padding: '0.5rem 0.75rem',
+                        fontSize: '0.8125rem',
+                        minWidth: '64px',
+                    },
                 },
                 containedPrimary: {
                     backgroundColor: styled.colors.primary.background,
@@ -129,6 +193,30 @@ export const theme = createTheme({
                     color: styled.colors.white,
                     '&:hover': {
                         backgroundColor: styled.colors.primary.hover,
+                    },
+                },
+                sizeLarge: {
+                    padding: '0.875rem 1.5rem',
+                    fontSize: '1rem',
+                    '@media (max-width: 900px)': {
+                        padding: '0.75rem 1.25rem',
+                        fontSize: '0.9375rem',
+                    },
+                    '@media (max-width: 600px)': {
+                        padding: '0.625rem 1rem',
+                        fontSize: '0.875rem',
+                    },
+                },
+                sizeSmall: {
+                    padding: '0.5rem 0.875rem',
+                    fontSize: '0.8125rem',
+                    '@media (max-width: 900px)': {
+                        padding: '0.4375rem 0.75rem',
+                        fontSize: '0.75rem',
+                    },
+                    '@media (max-width: 600px)': {
+                        padding: '0.375rem 0.625rem',
+                        fontSize: '0.75rem',
                     },
                 },
             },
@@ -307,6 +395,29 @@ export const theme = createTheme({
                     backgroundColor: styled.colors.background.default,
                     '& .MuiTableCell-body': {
                         color: styled.colors.white,
+                    },
+                },
+            },
+        },
+        MuiRadio: {
+            defaultProps: {
+                sx: {
+                    '&.MuiButtonBase-root': {
+                        padding: '5px',
+                    },
+                },
+            },
+            styleOverrides: {
+                root: {
+                    '& .MuiSvgIcon-root': {
+                        fontSize: 16,
+                    },
+                    color: styled.colors.text.disabled,
+                    '&.Mui-checked': {
+                        color: styled.colors.success,
+                    },
+                    '&.Mui-disabled': {
+                        color: styled.colors.text.disabled,
                     },
                 },
             },

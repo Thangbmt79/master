@@ -6,10 +6,12 @@ import { BaseAutoComplete, BaseAutoCompleteOption } from '../components/base/Bas
 import { BaseTextField } from '../components/base/BaseTextField';
 import { BasePage } from '../components/layout/BasePage';
 import { ParkingSpaceItem } from '../components/parking/ParkingSpaceItem';
+import useMedia from '../hooks/useMedia';
+import { useNavigate } from 'react-router-dom';
 
 const PAGE_SIZE = 5;
 
-async function fetchParkingSpaces({ search, page, location }: { search: string; page: number; location?: string }) {
+async function fetchParkingSpaces({ search, page }: { search: string; page: number; location?: string }) {
     const skip = (page - 1) * PAGE_SIZE;
     let url = `https://dummyjson.com/products/search?q=${encodeURIComponent(search)}&limit=${PAGE_SIZE}&skip=${skip}`;
     const res = await fetch(url);
@@ -40,6 +42,9 @@ async function fetchLocationOptions({ search }: { search: string }) {
 }
 
 export const ParkingSpacePage = () => {
+    const { isMobileSM } = useMedia();
+    const navigate = useNavigate();
+
     const [search, setSearch] = useState('');
     const [location, setLocation] = useState<BaseAutoCompleteOption | null>(null);
     const [page, setPage] = useState(1);
@@ -60,8 +65,13 @@ export const ParkingSpacePage = () => {
     const totalPages = Math.ceil(total / PAGE_SIZE);
 
     return (
-        <BasePage pageId="parking" title="Parking Space" actionButtonText="Add Parking">
-            <Stack direction="row" spacing={2} my={2}>
+        <BasePage
+            pageId="parking"
+            title="Parking Space"
+            actionButtonText="Add Parking"
+            actionButtonProps={{ onClick: () => navigate('/parking/add') }}
+        >
+            <Stack direction={isMobileSM ? 'column' : 'row'} spacing={isMobileSM ? 1 : 2} my={isMobileSM ? 1 : 2}>
                 <BaseTextField
                     placeholder="Search"
                     sx={{ width: '100%', input: { paddingLeft: 0 } }}

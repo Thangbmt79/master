@@ -2,11 +2,7 @@ import React from 'react';
 import { Breadcrumbs as MuiBreadcrumbs, Typography, Link } from '@mui/material';
 import { styled } from '../../theme/Tokens';
 import NavigateNextIcon from '../../assets/appbar-icon/NavigateNextIcon';
-
-export interface BreadcrumbItem {
-    title: React.ReactNode;
-    path?: string;
-}
+import { BreadcrumbItem } from '../layout/BasePage';
 
 interface BreadcrumbsProps {
     items: BreadcrumbItem[];

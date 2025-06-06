@@ -1,8 +1,11 @@
 import { Fade, IconButton, styled, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
 import { styled as colors } from '../../../theme/Tokens';
 import { ToolTipProps } from './TooltipIconButton';
+import useMedia from '../../../hooks/useMedia';
 
 export default function TooltipDangerIconButton(props: ToolTipProps) {
+    const { isMobileSM } = useMedia();
+
     return (
         <DangerTooltip title={props.tooltipTitle ?? 'label'} placement="top" onClick={props.onClick}>
             <IconButton
@@ -11,8 +14,8 @@ export default function TooltipDangerIconButton(props: ToolTipProps) {
                         background: colors.colors.neutral['02'],
                         boxShadow: `0 0 0 4px ${colors.colors.neutral['03']}`,
                     },
-                    width: 26,
-                    height: 26,
+                    width: isMobileSM ? 24 : 26,
+                    height: isMobileSM ? 24 : 26,
                 }}
                 size="small"
             >

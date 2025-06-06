@@ -1,12 +1,14 @@
 import { Box, SxProps, Typography } from '@mui/material';
-import { styled } from '../../theme/Tokens';
+import { Variant } from '@mui/material/styles/createTypography';
 import { ReactNode } from 'react';
+import { styled } from '../../theme/Tokens';
 
 interface TextAndBoxBorderProps {
     title: ReactNode;
     styledTypography?: SxProps;
     showBorder?: boolean;
     styledBorder?: SxProps;
+    variant?: Variant;
 }
 
 export default function TextAndBoxBorder({
@@ -14,6 +16,7 @@ export default function TextAndBoxBorder({
     styledTypography,
     showBorder = true,
     styledBorder,
+    variant,
 }: TextAndBoxBorderProps) {
     return (
         <Box display="flex" alignItems="center" gap={1}>
@@ -30,7 +33,7 @@ export default function TextAndBoxBorder({
             )}
 
             <Typography
-                variant="h1"
+                variant={variant || 'h1'}
                 sx={{
                     fontSize: styled.typography.h1.fontSize,
                     fontWeight: styled.typography.h1.fontWeight,

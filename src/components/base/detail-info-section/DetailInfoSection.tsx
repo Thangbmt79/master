@@ -3,10 +3,10 @@ import { ReactNode } from 'react';
 import { styled } from '../../../theme/Tokens';
 
 export default function DetailInfoSection(props: {
-    icon?: JSX.Element;
     title: ReactNode;
     content: ReactNode;
     action?: ReactNode;
+    buttonAction?: ReactNode;
 }) {
     return (
         <Stack
@@ -26,11 +26,11 @@ export default function DetailInfoSection(props: {
                     position: 'relative',
                 }}
             >
-                <Stack direction={'row'} spacing={2} alignItems={'center'}>
-                    {props.icon && props.icon}
+                <Stack direction={'row'} justifyContent={'space-between'} width={'100%'}>
                     <Typography variant="h5" mt={'2px'}>
                         {props.title}
                     </Typography>
+                    {props.buttonAction && props.buttonAction}
                 </Stack>
                 {props.action && props.action}
             </Stack>
