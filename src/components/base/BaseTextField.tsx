@@ -13,6 +13,7 @@ export const BaseTextField: React.FC<BaseTextFieldProps> = ({ required = false, 
     <TextField
         {...rest}
         required={false}
+        variant={'filled'}
         label={
             required && label ? (
                 <>

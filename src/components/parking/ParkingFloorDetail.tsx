@@ -1,68 +1,61 @@
-import { Box, Stack, Typography, Grid, Button } from '@mui/material';
-import React, { useCallback, useState } from 'react';
-import { styled } from '../../theme/Tokens';
-import DetailInfoSection from '../base/detail-info-section/DetailInfoSection';
-import TextAndBoxBorder from '../base/TextAndBoxBorder';
-import { ParkingSpaceItem } from './ParkingSpaceItem';
-import { ParkingFloorMap } from '../maps/ParkingFloorMap';
-import { ParkingSpot, PolygonPoint } from '../maps/configs';
-import { v4 as uuidv4 } from 'uuid';
+import { Box, Button, Grid, InputAdornment, Stack, Typography } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import React, { useEffect, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import FilterIcon from '../../assets/layout-icon/FilterIcon';
+import SearchValueIcon from '../../assets/layout-icon/SearchValueIcon';
 import useMedia from '../../hooks/useMedia';
-const mockParkingSpaces = {
-    name: 'Parking Space A1',
-    desc: 'Level L1 comprises residential apartments with modern amenities, including a fitness center, lounge areas, and access to landscaped terraces.',
-};
+import { ParkingSpotResponse, fetchParkingSpots } from '../../services/parkingApi';
+import { styled } from '../../theme/Tokens';
+import { BaseTextField } from '../base/BaseTextField';
+import DetailInfoSection from '../base/detail-info-section/DetailInfoSection';
+import ScrollableBoxCustom from '../base/ScrollableBoxCustom';
+import TextAndBoxBorder from '../base/TextAndBoxBorder';
+import { UpsertFloorPopup } from './UpsertFloorPopup';
+import { ParkingSpaceItem } from './ParkingSpaceItem';
+import { ParkingSpaceSkeleton } from './ParkingSpaceSkeleton';
+import FloorOutDoor from './FloorOutDoor';
 
-const mockParkingSpots: ParkingSpot = {
-    id: '1',
-    position: { lat: 10.762622, lng: 106.660172 },
-    isOccupied: false,
-    label: 'A1',
-};
+export enum ModeUpsertFloor {
+    ADD,
+    EDIT,
+}
 
 export const ParkingFloorDetail: React.FC = () => {
     const { isMediumMD } = useMedia();
-    const [drawingMode, setDrawingMode] = useState(false);
-    const [polygon, setPolygon] = useState<PolygonPoint[]>();
-    console.log('🚀 ~ polygon - draw:', polygon);
+    const [search, setSearch] = useState<string>('');
+    const [isAddFloorOpen, setIsAddFloorOpen] = useState<boolean>(false);
+    const [modeUpsertFloor, setModeUpsertFloor] = useState<ModeUpsertFloor | null>(null);
+    const [selectedParkingSpace, setSelectedParkingSpace] = useState<ParkingSpotResponse | null>(null);
 
-    const handleSpotClick = useCallback((spot: ParkingSpot) => {
-        console.log('Clicked spot:', spot);
-    }, []);
-
-    const handlePolygonComplete = useCallback(
-        (polygon: google.maps.Polygon) => {
-            const path = polygon.getPath();
-            const coordinates: PolygonPoint[] = [];
-
-            for (let i = 0; i < path.getLength(); i++) {
-                const point = path.getAt(i);
-                coordinates.push({
-                    lat: point.lat(),
-                    lng: point.lng(),
-                    _fakeId: uuidv4(),
-                });
+    const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery({
+        queryKey: ['parkingSpots', search],
+        queryFn: ({ pageParam = 1 }) => fetchParkingSpots({ search, page: pageParam, pageSize: 5 }),
+        getNextPageParam: (lastPage, pages) => {
+            if (lastPage.hasMore) {
+                return pages.length + 1;
             }
-
-            setPolygon(coordinates);
-
-            if (drawingMode) {
-                polygon.setMap(null);
-                google.maps.event.clearInstanceListeners(polygon);
-                setDrawingMode(false);
-            }
+            return undefined;
         },
-        [drawingMode]
-    );
+        initialPageParam: 1,
+    });
 
-    const handleDrawingClick = useCallback(() => {
-        setDrawingMode(true);
-        setPolygon(undefined);
-    }, []);
+    const allParkingSpots = data?.pages.flatMap((page) => page.data) ?? [];
 
-    const handleDeletePolygon = useCallback(() => {
-        setPolygon(undefined);
-    }, []);
+    useEffect(() => {
+        if (allParkingSpots.length > 0 && !selectedParkingSpace && modeUpsertFloor === null) {
+            setSelectedParkingSpace(allParkingSpots[0]);
+        }
+    }, [allParkingSpots]);
+
+    if (isLoading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+                <CircularProgress color="success" />
+            </Box>
+        );
+    }
 
     return (
         <Grid container spacing={3}>
@@ -76,9 +69,105 @@ export const ParkingFloorDetail: React.FC = () => {
                                 styledBorder={{ height: 16 }}
                             />
                         }
+                        buttonAction={
+                            <Button
+                                size="small"
+                                variant="contained"
+                                onClick={() => {
+                                    setModeUpsertFloor(ModeUpsertFloor.ADD);
+                                    setIsAddFloorOpen(true);
+                                }}
+                            >
+                                Add floor
+                            </Button>
+                        }
                         content={
-                            <Stack spacing={2} p={2}>
-                                <ParkingSpaceItem item={mockParkingSpaces} onDelete={() => {}} onEdit={() => {}} />
+                            <Stack direction={'column'} spacing={2} p={2}>
+                                <Stack
+                                    direction={'row'}
+                                    alignItems={'center'}
+                                    spacing={2}
+                                    justifyContent={'space-between'}
+                                >
+                                    <BaseTextField
+                                        placeholder="Search"
+                                        sx={{
+                                            width: '100%',
+                                            '& input': {
+                                                padding: 0,
+                                            },
+                                            '& .MuiFilledInput-root': {
+                                                minHeight: '40px',
+                                            },
+                                        }}
+                                        value={search}
+                                        onChange={(e) => {
+                                            setSearch(e.target.value);
+                                        }}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment
+                                                    position="start"
+                                                    sx={{
+                                                        mt: '0 !important',
+                                                    }}
+                                                >
+                                                    <SearchValueIcon />
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                    />
+                                    <Button
+                                        size="small"
+                                        variant="text"
+                                        startIcon={<FilterIcon />}
+                                        sx={{
+                                            border: `1px solid ${styled.colors.neutral['02']}`,
+                                            bgcolor: styled.colors.primary.dark,
+                                            color: styled.colors.text.secondary,
+                                        }}
+                                    >
+                                        Filter
+                                    </Button>
+                                </Stack>
+                                <ScrollableBoxCustom maxHeight={'40vh'} id="scrollableDiv">
+                                    <InfiniteScroll
+                                        dataLength={allParkingSpots.length}
+                                        next={fetchNextPage}
+                                        hasMore={!!hasNextPage}
+                                        loader={
+                                            <Stack spacing={1}>
+                                                <ParkingSpaceSkeleton />
+                                                <ParkingSpaceSkeleton />
+                                            </Stack>
+                                        }
+                                        scrollableTarget="scrollableDiv"
+                                        scrollThreshold={0.8}
+                                    >
+                                        {allParkingSpots.map((item) => (
+                                            <ParkingSpaceItem
+                                                key={item.id}
+                                                item={item}
+                                                onDelete={() => {
+                                                    console.log('delete', item.id);
+                                                }}
+                                                onEdit={() => {
+                                                    console.log('edit', item.id);
+                                                    setModeUpsertFloor(ModeUpsertFloor.EDIT);
+                                                    setIsAddFloorOpen(true);
+                                                    setSelectedParkingSpace(item);
+                                                }}
+                                                onSelect={(item) => {
+                                                    setSelectedParkingSpace(item);
+                                                }}
+                                                selectedParkingSpace={selectedParkingSpace}
+                                            />
+                                        ))}
+                                    </InfiniteScroll>
+                                </ScrollableBoxCustom>
                             </Stack>
                         }
                     />
@@ -94,48 +183,33 @@ export const ParkingFloorDetail: React.FC = () => {
                                 color: styled.colors.success,
                             }}
                         >
-                            L1 – ground
+                            {selectedParkingSpace?.name}
                         </Typography>
-                    }
-                    buttonAction={
-                        <Stack direction="row" spacing={2}>
-                            {polygon ? (
-                                <Button size="small" variant="contained" color="error" onClick={handleDeletePolygon}>
-                                    Delete Polygon
-                                </Button>
-                            ) : (
-                                <Button
-                                    size="small"
-                                    variant="contained"
-                                    onClick={handleDrawingClick}
-                                    disabled={drawingMode}
-                                >
-                                    Draw Polygon
-                                </Button>
-                            )}
-                            <Button size="small" variant="outlined">
-                                Import File
-                            </Button>
-                        </Stack>
                     }
                     content={
                         <Box p={2}>
                             <Typography variant="body2" mb={2}>
-                                {mockParkingSpaces.desc}
+                                {selectedParkingSpace?.desc || 'No description available'}
                             </Typography>
-
-                            <ParkingFloorMap
-                                center={{ lat: 10.762622, lng: 106.660172 }}
-                                parkingSpots={mockParkingSpots}
-                                onSpotClick={handleSpotClick}
-                                polygon={polygon}
-                                onPolygonComplete={handlePolygonComplete}
-                                drawingMode={drawingMode}
-                            />
+                            <FloorOutDoor />
                         </Box>
                     }
                 />
             </Grid>
+
+            <UpsertFloorPopup
+                open={isAddFloorOpen}
+                parkingSpaceItem={selectedParkingSpace}
+                modeUpsertFloor={modeUpsertFloor}
+                onClose={() => {
+                    setIsAddFloorOpen(false);
+                    setModeUpsertFloor(null);
+                }}
+                onSubmit={(data) => {
+                    console.log('New floor data:', data);
+                    setIsAddFloorOpen(false);
+                }}
+            />
         </Grid>
     );
 };

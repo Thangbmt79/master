@@ -16,10 +16,10 @@ interface FloorOutDoorProps {
     imageUrl?: string;
 }
 
-export const FloorOutDoor: React.FC<FloorOutDoorProps> = () => {
+export const FloorOutDoor: React.FC<FloorOutDoorProps> = ({ imageUrl }) => {
     return (
         <ImageContainer>
-            <img src={'/image/floorOutDoor.png'} alt="Parking Layout" loading="lazy" />
+            <img src={imageUrl || '/image/floorOutDoor.png'} alt="Parking Layout" loading="lazy" />
         </ImageContainer>
     );
 };

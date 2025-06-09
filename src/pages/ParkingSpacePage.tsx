@@ -45,12 +45,12 @@ export const ParkingSpacePage = () => {
     const { isMobileSM } = useMedia();
     const navigate = useNavigate();
 
-    const [search, setSearch] = useState('');
-    const [location, setLocation] = useState<BaseAutoCompleteOption | null>(null);
-    const [page, setPage] = useState(1);
     const [spaces, setSpaces] = useState<any[]>([]);
-    const [total, setTotal] = useState(0);
-    const [loading, setLoading] = useState(false);
+    const [location, setLocation] = useState<BaseAutoCompleteOption | null>(null);
+    const [search, setSearch] = useState<string>('');
+    const [page, setPage] = useState<number>(1);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [total, setTotal] = useState<number>(0);
 
     useEffect(() => {
         setLoading(true);
@@ -74,21 +74,30 @@ export const ParkingSpacePage = () => {
             <Stack direction={isMobileSM ? 'column' : 'row'} spacing={isMobileSM ? 1 : 2} my={isMobileSM ? 1 : 2}>
                 <BaseTextField
                     placeholder="Search"
-                    sx={{ width: '100%', input: { paddingLeft: 0 } }}
+                    sx={{
+                        width: '100%',
+                        '& input': {
+                            padding: 0,
+                        },
+                    }}
                     value={search}
                     onChange={(e) => {
                         setSearch(e.target.value);
-                        setPage(1);
                     }}
                     InputProps={{
                         startAdornment: (
-                            <InputAdornment position="start">
+                            <InputAdornment
+                                position="start"
+                                sx={{
+                                    mt: '0 !important',
+                                }}
+                            >
                                 <SearchValueIcon />
                             </InputAdornment>
                         ),
                     }}
                     InputLabelProps={{
-                        shrink: false,
+                        shrink: true,
                     }}
                 />
                 <BaseAutoComplete

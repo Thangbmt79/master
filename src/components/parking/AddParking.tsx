@@ -1,6 +1,5 @@
 import { Box, Button, FormControl, FormControlLabel, Grid, Radio, RadioGroup, Stack, Typography } from '@mui/material';
-import { Marker } from '@react-google-maps/api';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useMedia from '../../hooks/useMedia';
 import { styled as styledTokens } from '../../theme/Tokens';
@@ -8,47 +7,30 @@ import { BaseTextField } from '../base/BaseTextField';
 import DetailInfoSection from '../base/detail-info-section/DetailInfoSection';
 import TextAndBoxBorder from '../base/TextAndBoxBorder';
 import { BasePage } from '../layout/BasePage';
-import { GoogleMapWrapper } from '../maps/GoogleMapWrapper';
-import { createMarkerIcon } from '../maps/ParkingFloorMap';
+import FormAddParkingFloor from './FormAddParkingFloor';
 
 export const AddParking: React.FC = () => {
     const navigate = useNavigate();
     const { isMobileSM } = useMedia();
-    const [markerIcon, setMarkerIcon] = useState<google.maps.Icon>();
-    const [clickedPosition, setClickedPosition] = useState<google.maps.LatLngLiteral | null>(null);
-    console.log('🚀 ~ clickedPosition:', clickedPosition);
+    const [name, setName] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
     const [parkingType, setParkingType] = useState<number>(1);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    console.log('🚀 ~ selectedFile:', selectedFile);
 
     const [formData, setFormData] = useState({
         name: '',
-        status: 'Active',
         country: '',
         city: '',
         postCode: '',
         streetNumber: '',
     });
 
-    const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (field: keyof typeof formData) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setFormData((prev) => ({
             ...prev,
             [field]: event.target.value,
         }));
-    };
-
-    const handleMapLoad = useCallback((map: google.maps.Map) => {
-        if (map) {
-            setMarkerIcon(createMarkerIcon(window.google));
-        }
-    }, []);
-
-    const handleMapClick = (e: google.maps.MapMouseEvent) => {
-        if (e && e.latLng) {
-            const lat = e.latLng.lat();
-            const lng = e.latLng.lng();
-            setClickedPosition({ lat, lng });
-        } else {
-            console.log('No latLng data in click event:', e);
-        }
     };
 
     const handleRadioChangeCameraType = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,41 +139,19 @@ export const AddParking: React.FC = () => {
                             <DetailInfoSection
                                 title={
                                     <TextAndBoxBorder
-                                        title={'Google maps'}
+                                        title={'Floor'}
                                         styledTypography={{ fontSize: styledTokens.typography.body1.fontSize }}
                                         styledBorder={{ height: 16 }}
                                     />
                                 }
                                 content={
-                                    <Box p={2}>
-                                        <GoogleMapWrapper
-                                            center={{ lat: 53.481959, lng: -2.237934 }}
-                                            zoom={15}
-                                            options={{
-                                                mapTypeId: 'roadmap',
-                                                mapTypeControl: true,
-                                                clickableIcons: false,
-                                                disableDefaultUI: false,
-                                            }}
-                                            onLoad={handleMapLoad}
-                                            onClick={handleMapClick}
-                                        >
-                                            {clickedPosition && (
-                                                <Marker
-                                                    draggable
-                                                    position={clickedPosition}
-                                                    icon={markerIcon}
-                                                    onDragEnd={(e: google.maps.MapMouseEvent) => {
-                                                        const newPos = {
-                                                            lat: e.latLng!.lat(),
-                                                            lng: e.latLng!.lng(),
-                                                        };
-                                                        setClickedPosition(newPos);
-                                                    }}
-                                                />
-                                            )}
-                                        </GoogleMapWrapper>
-                                    </Box>
+                                    <FormAddParkingFloor
+                                        name={name}
+                                        description={description}
+                                        onChangeName={setName}
+                                        onChangeDescription={setDescription}
+                                        onFileChange={setSelectedFile}
+                                    />
                                 }
                             />
                         </Grid>

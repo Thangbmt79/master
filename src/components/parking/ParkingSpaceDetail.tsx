@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Grid, styled as muiStyled, Stack, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Grid, styled as muiStyled, Stack, Tooltip, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from '../../theme/Tokens';
@@ -8,6 +8,7 @@ import { BasePage } from '../layout/BasePage';
 import { Product } from '../utils';
 import ParkingFloorDetail from './ParkingFloorDetail';
 import useMedia from '../../hooks/useMedia';
+import EditIcon from '../../assets/layout-icon/EditIcon';
 
 const LoadingWrapper = muiStyled(Box)({
     display: 'flex',
@@ -120,7 +121,6 @@ export const ParkingSpaceDetail: React.FC = () => {
                     </SubTitle>
                 </Box>
             }
-            actionButtonText="Edit Parking"
             customBreadcrumbs={[
                 {
                     title: (
@@ -147,6 +147,17 @@ export const ParkingSpaceDetail: React.FC = () => {
                         styledTypography={{ fontSize: styled.typography.body1.fontSize }}
                         styledBorder={{ height: 16 }}
                     />
+                }
+                action={
+                    <Tooltip arrow title="Edit" placement="top">
+                        <Button
+                            variant="text"
+                            sx={{ minWidth: 25, height: 25, py: 1, px: 0.5 }}
+                            onClick={() => {}}
+                        >
+                            <EditIcon />
+                        </Button>
+                    </Tooltip>
                 }
                 content={
                     <Grid container spacing={2} p={2}>

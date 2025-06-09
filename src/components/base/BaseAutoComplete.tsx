@@ -73,7 +73,6 @@ export const BaseAutoComplete: React.FC<BaseAutoCompleteProps> = ({
     const debounceTimeout = useRef<number | null>(null);
     const lastSearch = useRef('');
 
-    // Debounced search
     useEffect(() => {
         if (!fetchOptions) return;
         setLoading(true);
@@ -93,10 +92,8 @@ export const BaseAutoComplete: React.FC<BaseAutoCompleteProps> = ({
         return () => {
             if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inputValue, fetchOptions, pageSize]);
 
-    // Infinite scroll fetch more
     const handleScroll = useCallback(
         (e: React.UIEvent<HTMLUListElement>) => {
             if (!fetchOptions || loadingMore || !hasMore) return;
@@ -116,24 +113,20 @@ export const BaseAutoComplete: React.FC<BaseAutoCompleteProps> = ({
         [fetchOptions, loadingMore, hasMore, page, pageSize]
     );
 
-    // Reset options if staticOptions change
     useEffect(() => {
         if (!fetchOptions && staticOptions) {
             setOptions(staticOptions);
         }
     }, [staticOptions, fetchOptions]);
 
-    // Open/close logic
     const handleInputFocus = () => setOpen(true);
     const handleInputBlur = () => setTimeout(() => setOpen(false), 150);
 
-    // Option select
     const handleOptionClick = (option: BaseAutoCompleteOption) => {
         onChange(option);
         setOpen(false);
     };
 
-    // Scroll to selected item when dropdown opens
     useEffect(() => {
         if (open && value && listRef.current) {
             const idx = options.findIndex((opt) => opt.id === value.id);
@@ -146,7 +139,6 @@ export const BaseAutoComplete: React.FC<BaseAutoCompleteProps> = ({
         }
     }, [open, value, options]);
 
-    // Quản lý inputValue độc lập, chỉ hiển thị inputValue khi chưa chọn hoặc đang gõ search mới
     const displayValue = value ? getOptionLabel(value) : inputValue;
 
     return (

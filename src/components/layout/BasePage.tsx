@@ -16,7 +16,7 @@ export interface BreadcrumbItem {
 interface BasePageProps {
     pageId: string;
     title: ReactNode;
-    actionButtonText: string;
+    actionButtonText?: string;
     children: ReactNode;
     actionButtonProps?: Partial<ButtonProps>;
     customBreadcrumbs?: BreadcrumbItem[];
@@ -112,11 +112,11 @@ export const BasePage = ({
                 />
             }
             pageAction={
-                actionButtonText ? (
+                actionButtonText && (
                     <Button variant="contained" startIcon={<AddIcon />} {...actionButtonProps}>
                         {actionButtonText}
                     </Button>
-                ) : null
+                )
             }
         >
             {children}

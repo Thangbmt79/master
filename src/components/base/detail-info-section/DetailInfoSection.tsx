@@ -26,7 +26,7 @@ export default function DetailInfoSection(props: {
                     position: 'relative',
                 }}
             >
-                <Stack direction={'row'} justifyContent={'space-between'} width={'100%'}>
+                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} width={'100%'}>
                     <Typography variant="h5" mt={'2px'}>
                         {props.title}
                     </Typography>

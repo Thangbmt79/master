@@ -292,24 +292,29 @@ export const theme = createTheme({
         MuiTextField: {
             styleOverrides: {
                 root: {
-                    backgroundColor: styled.colors.primary.dark,
+                    backgroundColor: '#000000',
                     borderRadius: styled.borderRadius.sm,
-                    '& .MuiOutlinedInput-root': {
-                        height: '40px',
-                        '& fieldset': {
-                            borderColor: '#414141',
-                            top: -5,
+                    '& .MuiFilledInput-root': {
+                        minHeight: '64px',
+                        height: 'auto',
+                        backgroundColor: 'transparent',
+                        border: '1px solid #414141',
+                        borderRadius: styled.borderRadius.sm,
+                        '&:hover': {
+                            backgroundColor: 'transparent',
+                            border: '1px solid #888888',
                         },
-                        '&:hover fieldset': {
-                            borderColor: '#888888',
+                        '&.Mui-focused': {
+                            backgroundColor: 'transparent',
+                            border: `1px solid ${styled.colors.white}`,
                         },
-                        '&.Mui-focused fieldset': {
-                            borderColor: styled.colors.white,
+                        '&::before, &::after': {
+                            display: 'none',
                         },
                         color: styled.colors.white,
                     },
-                    '& input': {
-                        padding: '0 14px',
+                    '& input, & textarea': {
+                        padding: '8px 14px 0',
                         color: styled.colors.white,
                         '&::placeholder': {
                             color: styled.colors.text.secondary,
@@ -317,13 +322,15 @@ export const theme = createTheme({
                         },
                     },
                     '& .MuiInputLabel-root': {
+                        paddingTop: '4px',
                         color: styled.colors.text.secondary,
-                        transform: 'translate(14px, 8px) scale(1)',
+                        transform: 'translate(14px, 16px) scale(1)',
                         '&.Mui-focused': {
                             color: styled.colors.text.secondary,
+                            transform: 'translate(14px, 4px) scale(0.75)',
                         },
                         '&.MuiInputLabel-shrink': {
-                            transform: 'translate(14px, -8px) scale(0.75)',
+                            transform: 'translate(14px, 4px) scale(0.75)',
                             color: styled.colors.text.secondary,
                         },
                     },

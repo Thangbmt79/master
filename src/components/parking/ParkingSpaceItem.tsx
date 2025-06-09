@@ -1,35 +1,58 @@
 import { Box, Stack, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 import DeleteIcon from '../../assets/layout-icon/DeleteIcon';
 import EditIcon from '../../assets/layout-icon/EditIcon';
+import useMedia from '../../hooks/useMedia';
+import { ParkingSpotResponse } from '../../services/parkingApi';
 import { styled } from '../../theme/Tokens';
 import TooltipDangerIconButton from '../base/tooltip/TooltipDangerIconButton';
 import TooltipIconButton from '../base/tooltip/TooltipIconButton';
-import { Link } from 'react-router-dom';
-import useMedia from '../../hooks/useMedia';
 
 export interface ParkingSpaceItemProps {
     item: any;
     onEdit?: () => void;
     onDelete?: () => void;
+    onSelect?: (item: ParkingSpotResponse | null) => void;
+    selectedParkingSpace?: ParkingSpotResponse | null;
 }
 
-export const ParkingSpaceItem: React.FC<ParkingSpaceItemProps> = ({ item, onEdit, onDelete }) => {
+export const ParkingSpaceItem: React.FC<ParkingSpaceItemProps> = ({
+    item,
+    selectedParkingSpace,
+    onEdit,
+    onDelete,
+    onSelect,
+}) => {
     const { isMobileSM } = useMedia();
+
+    const handleClickItem = () => {
+        onSelect?.(item);
+    };
 
     return (
         <Box
             sx={{
                 bgcolor: styled.colors.background.paper,
                 border: '1px solid',
-                borderColor: onEdit || onDelete ? styled.colors.neutral['03'] : styled.colors.white,
+                borderColor: item.id === selectedParkingSpace?.id ? styled.colors.success : styled.colors.neutral['03'],
                 borderRadius: styled.borderRadius.md,
                 p: isMobileSM ? 1 : 2,
                 mb: isMobileSM ? 1 : 2,
+                cursor: 'pointer',
+            }}
+            onClick={() => {
+                if (selectedParkingSpace) handleClickItem();
             }}
         >
             <Box width={'100%'}>
                 <Stack direction={'row'} justifyContent={'space-between'}>
-                    <Link to={`/parking/${item.id}`} style={{ textDecoration: 'none' }}>
+                    <Link
+                        to={`/parking/${item.id}`}
+                        style={{ textDecoration: 'none' }}
+                        onClick={(e) => {
+                            if (selectedParkingSpace) e.preventDefault();
+                        }}
+                    >
                         <Typography variant="h4" sx={{ color: styled.colors.text.primary, mb: 1, mr: '4px' }}>
                             {item.name}
                         </Typography>

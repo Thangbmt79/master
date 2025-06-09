@@ -83,7 +83,6 @@ export const TestPage = () => {
                         required
                         sx={{ width: '100%' }}
                         label="Format"
-                        variant="outlined"
                         placeholder="Format"
                         InputLabelProps={{ shrink: true }}
                     />
