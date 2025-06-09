@@ -1,9 +1,22 @@
+import { MenuList } from '@mui/material';
 import AssetsIcon from '../assets/drawer-icon/AssetsIcon';
 import CarCheckInOrCheckOutIcon from '../assets/drawer-icon/CarCheckInOrCheckOutIcon';
 import PackingSpaceIcon from '../assets/drawer-icon/PackingSpaceIcon';
-import { MenuItem } from '../components/layout/DrawerMenu';
+
+export interface MenuItem {
+    id: string;
+    title: string;
+    icon: React.ReactNode;
+    path: string;
+}
 
 export const menuItems: MenuItem[] = [
+    {
+        id: 'menu',
+        title: 'Menu',
+        icon: <MenuList />,
+        path: '/menu',
+    },
     {
         id: 'parking',
         title: 'Parking Space',
@@ -22,4 +35,10 @@ export const menuItems: MenuItem[] = [
         icon: <CarCheckInOrCheckOutIcon />,
         path: '/car-check',
     },
-]; 
+    {
+        id: 'test',
+        title: 'Test',
+        icon: <PackingSpaceIcon />,
+        path: '/test',
+    },
+];

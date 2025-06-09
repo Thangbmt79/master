@@ -1,4 +1,4 @@
-export const tokens = {
+export const styled = {
     colors: {
         white: '#FFFFFF',
         primary: {
@@ -6,6 +6,8 @@ export const tokens = {
             light: '#2A2A2A',
             dark: '#000000',
             background: '#3C424C',
+            hover: '#25292F',
+            border: '#4A4A4A',
         },
         neutral: {
             '04': '#191F2B',
@@ -27,6 +29,9 @@ export const tokens = {
             hover: 'rgba(255, 255, 255, 0.08)',
             selected: 'rgba(255, 255, 255, 0.16)',
         },
+        danger: '#E01B00',
+        darkDanger: '#BE1700',
+        success: '#22C55E',
     },
     spacing: {
         xs: '4px',
@@ -61,4 +66,4 @@ export const tokens = {
     },
 } as const;
 
-export type Tokens = typeof tokens;
+export type Styled = typeof styled;

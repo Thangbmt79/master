@@ -1,12 +1,13 @@
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import React from 'react';
-import { tokens } from '../../theme/tokens';
-import { BreadcrumbItem } from '../base/Breadcrumbs';
+import { styled } from '../../theme/Tokens';
+import ScrollableBoxCustom from '../base/ScrollableBoxCustom';
 import { AppHeader } from './AppHeader';
-import { DrawerMenu, MenuItem } from './DrawerMenu';
+import { DrawerMenu } from './DrawerMenu';
+import useMedia from '../../hooks/useMedia';
+import { BreadcrumbItem } from './BasePage';
 
 interface MainLayoutProps {
-    menuItems: MenuItem[];
     selectedMenuId: string;
     onMenuSelect: (id: string) => void;
     breadcrumbs: BreadcrumbItem[];
@@ -19,9 +20,9 @@ interface MainLayoutProps {
 }
 
 const HEADER_HEIGHT = 64;
+const HEADER_HEIGHT_MOBILE = 56;
 
 export const MainLayout = ({
-    menuItems,
     selectedMenuId,
     onMenuSelect,
     breadcrumbs,
@@ -32,9 +33,11 @@ export const MainLayout = ({
     pageTitle,
     pageAction,
 }: MainLayoutProps) => {
+    const { isMobileSM } = useMedia();
+    const headerHeight = isMobileSM ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT;
     return (
-        <Box sx={{ display: 'flex', height: '100vh', bgcolor: tokens.colors.primary.background }}>
-            <DrawerMenu items={menuItems} selectedId={selectedMenuId} onSelect={onMenuSelect} />
+        <Box sx={{ display: 'flex', height: '100vh', bgcolor: styled.colors.primary.background }}>
+            <DrawerMenu selectedId={selectedMenuId} onSelect={onMenuSelect} />
 
             <Box
                 component="main"
@@ -44,7 +47,7 @@ export const MainLayout = ({
                     overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
-                    p: 2,
+                    p: isMobileSM ? 1 : 2,
                 }}
             >
                 <AppHeader
@@ -55,30 +58,29 @@ export const MainLayout = ({
                 />
                 <Box
                     sx={{
-                        bgcolor: tokens.colors.primary.main,
-                        border: `1px solid ${tokens.colors.neutral['03']}`,
-                        mt: `${HEADER_HEIGHT}px`,
-                        px: tokens.spacing.lg,
-                        py: tokens.spacing.lg,
-                        height: `calc(100% - ${HEADER_HEIGHT}px)`,
-                        borderRadius: tokens.borderRadius.sm,
+                        bgcolor: styled.colors.primary.main,
+                        border: `1px solid ${styled.colors.neutral['03']}`,
+                        mt: `${headerHeight}px`,
+                        px: isMobileSM ? styled.spacing.md : styled.spacing.lg,
+                        py: isMobileSM ? styled.spacing.md : styled.spacing.lg,
+                        height: `calc(100% - ${headerHeight}px)`,
+                        borderRadius: styled.borderRadius.sm,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        overflow: 'hidden',
                     }}
                 >
-                    <Box>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                mb: tokens.spacing.lg,
-                            }}
-                        >
-                            {pageTitle}
-                            {pageAction}
-                        </Box>
+                    <Stack
+                        direction={isMobileSM ? 'column' : 'row'}
+                        justifyContent="space-between"
+                        mb={isMobileSM ? styled.spacing.md : styled.spacing.lg}
+                        spacing={!isMobileSM ? 0 : styled.spacing.md}
+                    >
+                        {pageTitle}
+                        {pageAction}
+                    </Stack>
 
-                        {children}
-                    </Box>
+                    <ScrollableBoxCustom>{children}</ScrollableBoxCustom>
                 </Box>
             </Box>
         </Box>

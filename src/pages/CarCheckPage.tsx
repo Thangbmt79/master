@@ -1,4 +1,6 @@
+import { Box } from '@mui/material';
 import { BasePage } from '../components/layout/BasePage';
+import { styled } from '../theme/Tokens';
 
 export const CarCheckPage = () => {
     return (
@@ -7,9 +9,9 @@ export const CarCheckPage = () => {
             title="Car Check In/Out"
             actionButtonText="New Check In/Out"
         >
-            <div style={{ padding: '20px', color: '#fff' }}>
+            <Box style={{ padding: '20px', color: styled.colors.white }}>
                 Content area - Add your car check in/out management components here
-            </div>
+            </Box>
         </BasePage>
     );
 }; 
